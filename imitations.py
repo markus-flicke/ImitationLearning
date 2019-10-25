@@ -16,16 +16,20 @@ def load_imitations(data_folder):
     observations:   python list of N numpy.ndarrays of size (96, 96, 3)
     actions:        python list of N numpy.ndarrays of size 3
     """
-    idx_file = os.path.join(data_folder, "count.npy")
-    assert os.path.exists(idx_file), "file doesn't exist: %s" % idx_file
-    idx = np.load(idx_file)
+    # idx_file = os.path.join(data_folder, "count.npy")
+    # assert os.path.exists(idx_file), "file doesn't exist: %s" % idx_file
+
+    idx = len(os.listdir(data_folder))//2
+
+    # idx = np.load(idx_file)
+
     observations = []
     actions = []
     for i in range(idx):
-            if i % max(1, int(idx / 10)) == 0:
-                print("preloading data %d/%d" % (i, idx - 1))
-    observations.append(np.load(os.path.join(data_folder, "observation %05d.npy" % i)))
-    actions.append(np.load(os.path.join(data_folder, "action %05d.npy" % i)))
+        if i % max(1, int(idx / 10)) == 0:
+            print("preloading data %d/%d" % (i, idx - 1))
+        observations.append(np.load(os.path.join(data_folder, "observation_%05d.npy" % i)))
+        actions.append(np.load(os.path.join(data_folder, "action_%05d.npy" % i)))
     return observations, actions
 
 
