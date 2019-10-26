@@ -14,7 +14,7 @@
 
 ### Extensions - improvements
 * **Data Augmentation**
-    * MIRROR! because there are mostly left turns, Rotate, decolorise
+    * MIRROR! because there are mostly left turns, rotate, decolorise
     * More examples when cars got off the road
         * Increase the curve examples/ decrease the straight line examples
         * Watch the agent and take over when it makes a mistake
@@ -71,4 +71,6 @@
 
 --------------
 ## Questions
+* Why does `scores_to_action` get a list of scores, but the only evaluates the first score?
+* Cross entropy loss
 * Inverse reinforcement learning

@@ -67,4 +67,6 @@ def cross_entropy_loss(batch_out, batch_gt):
     batch_gt:       torch.Tensor of size (batch_size, number_of_classes)
     return          float
     """
-    pass
+    epsilon = 0.000001
+    loss = batch_gt * torch.log(batch_out + epsilon) + (1 - batch_gt) * torch.log(1 - batch_out + epsilon)
+    return -torch.mean(torch.sum(loss, dim=1), dim=0)

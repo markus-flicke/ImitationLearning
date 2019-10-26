@@ -7,7 +7,7 @@ from pyglet.window import key
 def load_imitations(data_folder):
     """
     1.1 a)
-    Given the folder containing the expert imitations, the data gets loaded and
+    Given the folder containing the expert imitations, the dat gets loaded and
     stored it in two lists: observations and actions.
                     N = number of (observation, action) - pairs
     data_folder:    python string, the path to the folder containing the
@@ -27,7 +27,7 @@ def load_imitations(data_folder):
     actions = []
     for i in range(idx):
         if i % max(1, int(idx / 10)) == 0:
-            print("preloading data %d/%d" % (i, idx - 1))
+            print("preloading dat %d/%d" % (i, idx - 1))
         observations.append(np.load(os.path.join(data_folder, "observation_%05d.npy" % i)))
         actions.append(np.load(os.path.join(data_folder, "action_%05d.npy" % i)))
     return observations, actions

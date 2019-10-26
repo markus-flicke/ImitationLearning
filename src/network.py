@@ -61,10 +61,10 @@ class ClassificationNetwork(torch.nn.Module):
         Maps the scores predicted by the network to an action-class and returns
         the corresponding action [steer, gas, brake].
         scores:         python list of torch.Tensors of size number_of_classes
-        scores = [torch.Tensor([0.2])]  + [torch.Tensor([0])]* 6+[torch.Tensor([1])]+[torch.Tensor([0])]
-        return          (float, float, float)
+        scores = [torch.Tensor([1,0,0,0,0,0,0,0,0])]
+        return          (float, float, float)  // This is the action resulting from the first score -> Therefore, why do we feed a list of scores?
         """
-        _, class_number = torch.max(torch.Tensor(scores), dim=0)
+        _, class_number = torch.max(scores[0], dim=0)
         steer, gas, brake = self.classes[class_number]
         return steer, gas, brake
 
