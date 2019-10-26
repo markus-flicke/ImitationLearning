@@ -21,7 +21,7 @@ def train(data_folder, trained_network_file):
 
     nr_epochs = 100
     batch_size = 64
-    number_of_classes = 0  # needs to be changed
+    number_of_classes = len(ClassificationNetwork.classes)
     start_time = time.time()
 
     for epoch in range(nr_epochs):
@@ -35,10 +35,8 @@ def train(data_folder, trained_network_file):
             batch_gt.append(batch[1].to(gpu))
 
             if (batch_idx + 1) % batch_size == 0 or batch_idx == len(batches) - 1:
-                batch_in = torch.reshape(torch.cat(batch_in, dim=0),
-                                         (-1, 96, 96, 3))
-                batch_gt = torch.reshape(torch.cat(batch_gt, dim=0),
-                                         (-1, number_of_classes))
+                batch_in = torch.reshape(torch.cat(batch_in, dim=0), (-1, 96, 96, 3))
+                batch_gt = torch.reshape(torch.cat(batch_gt, dim=0), (-1, number_of_classes))
 
                 batch_out = infer_action(batch_in)
                 loss = cross_entropy_loss(batch_out, batch_gt)

@@ -22,15 +22,39 @@ class ClassificationNetwork(torch.nn.Module):
         super().__init__()
         gpu = torch.device('cuda')
 
+        self.features_2d = torch.nn.Sequential(
+            torch.nn.Conv2d(1, 2, 3, stride=1),
+            torch.nn.LeakyReLU(negative_slope=0.2),  # 94x94
+            torch.nn.Conv2d(2, 4, 3, stride=2),
+            torch.nn.LeakyReLU(negative_slope=0.2),  # 46x46
+            torch.nn.Conv2d(4, 8, 3, stride=2),
+            torch.nn.LeakyReLU(negative_slope=0.2),  # 22x22
+        ).to(gpu)
+
+        self.scores = torch.nn.Sequential(
+            torch.nn.Linear(8 * 22 * 22, 64),
+            torch.nn.LeakyReLU(negative_slope=0.2),
+            torch.nn.Linear(64, 32),
+            torch.nn.LeakyReLU(negative_slope=0.2),
+            torch.nn.Linear(32, 16),
+            torch.nn.LeakyReLU(negative_slope=0.2),
+            torch.nn.Linear(16, 9),
+            torch.nn.Softmax(dim=1)
+        ).to(gpu)
+
     def forward(self, observation):
         """
         1.1 e)
         The forward pass of the network. Returns the prediction for the given
-        input observation.
+        input observation. We chose grayscale, because there is no additional information in the colors
         observation:   torch.Tensor of size (batch_size, 96, 96, 3)
         return         torch.Tensor of size (batch_size, number_of_classes)
         """
-        pass
+        batch_size = observation.shape[0]
+        observation = observation[:, :, :, 0] * 0.2989 + observation[:, :, :, 1] * 0.5870 + observation[:, :, :, 2] * 0.1140
+        obs = observation.reshape(batch_size, 1, 96, 96)
+        features_2d = self.features_2d(obs).reshape(batch_size, -1)
+        return self.scores(features_2d)
 
     def actions_to_classes(self, actions):
         """
@@ -52,8 +76,7 @@ class ClassificationNetwork(torch.nn.Module):
         #         l.append(is_in_class)
         #     res.append(torch.Tensor(l))
         # return res
-        return [torch.Tensor([int(torch.prod(torch.Tensor(action) == this_class )) for this_class in torch.Tensor(self.classes)]) for action in actions]
-
+        return [torch.Tensor([int(torch.prod(torch.Tensor(action) == this_class)) for this_class in torch.Tensor(self.classes)]) for action in actions]
 
     def scores_to_action(self, scores):
         """
@@ -67,7 +90,6 @@ class ClassificationNetwork(torch.nn.Module):
         _, class_number = torch.max(scores[0], dim=0)
         steer, gas, brake = self.classes[class_number]
         return steer, gas, brake
-
 
     def extract_sensor_values(self, observation, batch_size):
         """

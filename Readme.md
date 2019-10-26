@@ -69,6 +69,7 @@
 * `extract_sensor_values` for access of the true speed, gyro etc
 * `calculate_score_for_leaderboard` will be used to evaluate, 
 
+
 --------------
 ## Questions
 * Why does `scores_to_action` get a list of scores, but the only evaluates the first score?
