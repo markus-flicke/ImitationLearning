@@ -7,9 +7,9 @@ import gym
 from training import train
 from imitations import record_imitations
 
-directory = ""  ######## change that! ########
-trained_network_file = os.path.join(directory, '../dat/train.t7')
-imitations_folder = os.path.join(directory, '../dat/teacher')
+directory = ".\\"
+trained_network_file = os.path.join(directory, r'..\dat\train.t7')
+imitations_folder = os.path.join(directory, r'..\dat\teacher')
 
 
 def evaluate():
@@ -22,12 +22,11 @@ def evaluate():
     device = torch.device('cpu')
     infer_action = infer_action.to(device)
 
-
     for episode in range(5):
         observation = env.reset()
 
         reward_per_episode = 0
-        for t in range(500):
+        for t in range(500): # 500
             env.render()
             action_scores = infer_action(torch.Tensor(np.ascontiguousarray(observation[None])).to(device))
 

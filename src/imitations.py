@@ -20,9 +20,6 @@ def load_imitations(data_folder):
     # assert os.path.exists(idx_file), "file doesn't exist: %s" % idx_file
 
     idx = len(os.listdir(data_folder))//2
-
-    # idx = np.load(idx_file)
-
     observations = []
     actions = []
     for i in range(idx):
@@ -44,7 +41,18 @@ def save_imitations(data_folder, actions, observations):
     observations:   python list of N numpy.ndarrays of size (96, 96, 3)
     actions:        python list of N numpy.ndarrays of size 3
     """
-    pass
+    idx_file = os.path.join(data_folder, "count.npy")
+    if os.path.exists(idx_file):
+        idx = np.load(idx_file)
+        print(f'the index is this: {idx}')
+        print(f'The data folder looks like this: {os.listdir(data_folder)}')
+    else:
+        idx = 0
+    for i in range(int(len(actions))//10):
+        print("Saving %d/%d" % (10 * i, len(actions)))
+        np.save(os.path.join(data_folder, "observation_%05d.npy" %(idx + i)), observations[10 * i])
+        np.save(os.path.join(data_folder, "action_%05d.npy" %(idx + i)), np.array(actions[10 * i]))
+    np.save(idx_file, idx + len(actions)// 10)
 
 
 class ControlStatus:

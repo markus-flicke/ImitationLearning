@@ -31,8 +31,15 @@ class ClassificationNetwork(torch.nn.Module):
             torch.nn.LeakyReLU(negative_slope=0.2),  # 22x22
         ).to(gpu)
 
+        self.features_1d = torch.nn.Sequential(
+            torch.nn.Linear(3344, 512),
+            torch.nn.LeakyReLU(negative_slope=0.2),
+            torch.nn.Linear(512, 64*16),
+            torch.nn.LeakyReLU(negative_slope=0.2)
+        ).to(gpu)
+
         self.scores = torch.nn.Sequential(
-            torch.nn.Linear(8 * 22 * 22, 64),
+            torch.nn.Linear(1031, 64), # torch.nn.Linear(8 * 22 * 22, 64),
             torch.nn.LeakyReLU(negative_slope=0.2),
             torch.nn.Linear(64, 32),
             torch.nn.LeakyReLU(negative_slope=0.2),
@@ -50,11 +57,31 @@ class ClassificationNetwork(torch.nn.Module):
         observation:   torch.Tensor of size (batch_size, 96, 96, 3)
         return         torch.Tensor of size (batch_size, number_of_classes)
         """
-        batch_size = observation.shape[0]
+        # Question 1 code:
+        # batch_size = observation.shape[0]
+        # observation = observation[:, :, :, 0] * 0.2989 + observation[:, :, :, 1] * 0.5870 + observation[:, :, :, 2] * 0.1140
+        # obs = observation.reshape(batch_size, 1, 96, 96)
+        # features_2d = self.features_2d(obs).reshape(batch_size, -1)
+        # return self.scores(features_2d)
+
+
+        batch_size = observation.shape[0] # 64
+        # extract sensor values
+        speed, abs_sensors, steering, gyroscope = self.extract_sensor_values(observation, batch_size)
+        # conversion to gray scale
         observation = observation[:, :, :, 0] * 0.2989 + observation[:, :, :, 1] * 0.5870 + observation[:, :, :, 2] * 0.1140
-        obs = observation.reshape(batch_size, 1, 96, 96)
+        # crop and reshape observations to 84 x 96
+        obs = observation[:, :84, :].reshape(batch_size, 1, 84, 96)
+        # get features
         features_2d = self.features_2d(obs).reshape(batch_size, -1)
-        return self.scores(features_2d)
+        features_1d = self.features_1d(features_2d)
+        fused_features = torch.cat((
+            speed,  # batch size x 1
+            abs_sensors,  # batch size x 4
+            steering,  # batch size x 1
+            gyroscope,  # batch size x 1
+            features_1d), 1)  # batch size x 16
+        return self.scores(fused_features)
 
     def actions_to_classes(self, actions):
         """
