@@ -26,7 +26,7 @@ def evaluate():
         observation = env.reset()
 
         reward_per_episode = 0
-        for t in range(500): # 500
+        for t in range(600): # 500
             env.render()
             action_scores = infer_action(torch.Tensor(np.ascontiguousarray(observation[None])).to(device))
 
