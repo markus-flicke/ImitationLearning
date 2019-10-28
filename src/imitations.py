@@ -22,6 +22,8 @@ def load_imitations(data_folder):
     idx = len(os.listdir(data_folder))//2
     observations = []
     actions = []
+
+
     for i in range(idx):
         if i % max(1, int(idx / 10)) == 0:
             print("preloading dat %d/%d" % (i, idx - 1))

@@ -68,6 +68,8 @@ class ClassificationNetwork(torch.nn.Module):
         batch_size = observation.shape[0] # 64
         # extract sensor values
         speed, abs_sensors, steering, gyroscope = self.extract_sensor_values(observation, batch_size)
+        
+
         # conversion to gray scale
         observation = observation[:, :, :, 0] * 0.2989 + observation[:, :, :, 1] * 0.5870 + observation[:, :, :, 2] * 0.1140
         # crop and reshape observations to 84 x 96

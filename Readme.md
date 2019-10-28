@@ -1,4 +1,3 @@
-# Readme
 ### MVP
 * Sequential conv net
 * Train frames independently
@@ -13,6 +12,9 @@
 
 
 ### Extensions - improvements
+* Remove grass
+* Train slower
+* Remove starting lag
 * **Data Augmentation**
     * MIRROR! because there are mostly left turns, rotate, decolorise
     * More examples when cars got off the road
