@@ -3,6 +3,7 @@ import sys
 import numpy as np
 import torch
 import gym
+from random import randint
 
 from training import train
 from imitations import record_imitations
@@ -51,6 +52,7 @@ def calculate_score_for_leaderboard():
 
     seeds = [22597174, 68545857, 75568192, 91140053, 86018367,
              49636746, 66759182, 91294619, 84274995, 31531469]
+    seeds = [randint(10000000, 99999999) for i in range(10)]
     total_reward = 0
 
     for episode in range(10):

@@ -19,7 +19,7 @@ def train(data_folder, trained_network_file):
                                       infer_action.actions_to_classes(actions))]
     gpu = torch.device('cuda')
 
-    nr_epochs = 300
+    nr_epochs = 100
     batch_size = 64
     number_of_classes = len(ClassificationNetwork.classes)
     start_time = time.time()

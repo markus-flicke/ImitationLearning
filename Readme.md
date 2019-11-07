@@ -74,6 +74,7 @@
 
 --------------
 ## Questions
-* Why does `scores_to_action` get a list of scores, but the only evaluates the first score?
+* Are we evaluated on 600 frames?
+* How to delete grass from a tensor?
 * Cross entropy loss
 * Inverse reinforcement learning

@@ -24,22 +24,22 @@ class ClassificationNetwork(torch.nn.Module):
 
         self.features_2d = torch.nn.Sequential(
             torch.nn.Conv2d(1, 2, 3, stride=1),
-            torch.nn.LeakyReLU(negative_slope=0.2),  # 94x94
+            torch.nn.LeakyReLU(negative_slope=0.2),  # 94x96
             torch.nn.Conv2d(2, 4, 3, stride=2),
             torch.nn.LeakyReLU(negative_slope=0.2),  # 46x46
-            torch.nn.Conv2d(4, 8, 3, stride=2),
-            torch.nn.LeakyReLU(negative_slope=0.2),  # 22x22
+
+
         ).to(gpu)
 
         self.features_1d = torch.nn.Sequential(
             torch.nn.Linear(3344, 512),
             torch.nn.LeakyReLU(negative_slope=0.2),
-            torch.nn.Linear(512, 64*16),
+            torch.nn.Linear(512, 64 * 16),
             torch.nn.LeakyReLU(negative_slope=0.2)
         ).to(gpu)
 
         self.scores = torch.nn.Sequential(
-            torch.nn.Linear(1031, 64), # torch.nn.Linear(8 * 22 * 22, 64),
+            torch.nn.Linear(1031, 64),
             torch.nn.LeakyReLU(negative_slope=0.2),
             torch.nn.Linear(64, 32),
             torch.nn.LeakyReLU(negative_slope=0.2),
@@ -53,11 +53,12 @@ class ClassificationNetwork(torch.nn.Module):
         """
         1.1 e)
         The forward pass of the network. Returns the prediction for the given
-        input observation. We chose grayscale, because there is no additional information in the colors
+        input observation. We chose grayscale, because there is no additional information in the colors.
+        We should achieve faster convergence because of this choice.
         observation:   torch.Tensor of size (batch_size, 96, 96, 3)
         return         torch.Tensor of size (batch_size, number_of_classes)
         """
-        # Question 1 code:
+        # Answer to Question 1:
         # batch_size = observation.shape[0]
         # observation = observation[:, :, :, 0] * 0.2989 + observation[:, :, :, 1] * 0.5870 + observation[:, :, :, 2] * 0.1140
         # obs = observation.reshape(batch_size, 1, 96, 96)
@@ -68,7 +69,7 @@ class ClassificationNetwork(torch.nn.Module):
         batch_size = observation.shape[0] # 64
         # extract sensor values
         speed, abs_sensors, steering, gyroscope = self.extract_sensor_values(observation, batch_size)
-        
+
 
         # conversion to gray scale
         observation = observation[:, :, :, 0] * 0.2989 + observation[:, :, :, 1] * 0.5870 + observation[:, :, :, 2] * 0.1140
