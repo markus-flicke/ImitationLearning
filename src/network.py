@@ -24,10 +24,11 @@ class ClassificationNetwork(torch.nn.Module):
 
         self.features_2d = torch.nn.Sequential(
             torch.nn.Conv2d(1, 2, 3, stride=1),
-            torch.nn.LeakyReLU(negative_slope=0.2),  # 94x96
+            torch.nn.LeakyReLU(negative_slope=0.2),  # 94x94
             torch.nn.Conv2d(2, 4, 3, stride=2),
             torch.nn.LeakyReLU(negative_slope=0.2),  # 46x46
-
+            torch.nn.Conv2d(4, 8, 3, stride=2),
+            torch.nn.LeakyReLU(negative_slope=0.2),  # 22x22
 
         ).to(gpu)
 
@@ -70,11 +71,16 @@ class ClassificationNetwork(torch.nn.Module):
         # extract sensor values
         speed, abs_sensors, steering, gyroscope = self.extract_sensor_values(observation, batch_size)
 
+        # deleting the grass
+        # gpu = torch.device('cuda')
+        # observation = torch.where(observation == 204, torch.tensor(0.).to(gpu), observation)
+        # observation = torch.where(observation == 229, torch.tensor(0.).to(gpu), observation)
 
         # conversion to gray scale
         observation = observation[:, :, :, 0] * 0.2989 + observation[:, :, :, 1] * 0.5870 + observation[:, :, :, 2] * 0.1140
         # crop and reshape observations to 84 x 96
         obs = observation[:, :84, :].reshape(batch_size, 1, 84, 96)
+
         # get features
         features_2d = self.features_2d(obs).reshape(batch_size, -1)
         features_1d = self.features_1d(features_2d)

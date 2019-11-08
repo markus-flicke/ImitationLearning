@@ -1,7 +1,13 @@
+### Reporting 
+* upload 1 document each = 2 docs. identical
+* use plots to describe experiments
+* Wants to see training loss + making sure that the experiments were actually run. For each experiment
+* May be more than 3 pages
+
+
 ### MVP
 * Sequential conv net
 * Train frames independently
-
 
 ### Problems
 * When we leave the expert trajectory, the model doesn't know what to do
@@ -74,7 +80,7 @@
 
 --------------
 ## Questions
-* Are we evaluated on 600 frames?
+* Are we evaluated on 600 frames? - yes
 * How to delete grass from a tensor?
 * Cross entropy loss
 * Inverse reinforcement learning

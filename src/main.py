@@ -20,7 +20,7 @@ def evaluate():
     infer_action.eval()
     env = gym.make('CarRacing-v0')
     # you can set it to torch.device('cuda') in case you have a gpu
-    device = torch.device('cpu')
+    device = torch.device('cuda')
     infer_action = infer_action.to(device)
 
     for episode in range(5):
@@ -44,15 +44,14 @@ def calculate_score_for_leaderboard():
     the final ranking on the course-wide leader-board, only with a different set
     of seeds. Better not change it.
     """
-    infer_action = torch.load(trained_network_file, map_location='cpu')
+    infer_action = torch.load(trained_network_file, map_location='cuda')
     infer_action.eval()
     env = gym.make('CarRacing-v0')
-    # you can set it to torch.device('cuda') in case you have a gpu
-    device = torch.device('cpu')
+    device = torch.device('cuda')
 
     seeds = [22597174, 68545857, 75568192, 91140053, 86018367,
              49636746, 66759182, 91294619, 84274995, 31531469]
-    seeds = [randint(10000000, 99999999) for i in range(10)]
+    # seeds = [randint(10000000, 99999999) for i in range(10)]
     total_reward = 0
 
     for episode in range(10):

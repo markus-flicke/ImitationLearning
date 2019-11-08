@@ -3,6 +3,7 @@ import random
 import time
 from network import ClassificationNetwork
 from imitations import load_imitations
+import numpy as np
 
 
 def train(data_folder, trained_network_file):
@@ -13,13 +14,14 @@ def train(data_folder, trained_network_file):
     optimizer = torch.optim.Adam(infer_action.parameters(), lr=0.01*1e-2)
     observations, actions = load_imitations(data_folder)
     observations = [torch.Tensor(observation) for observation in observations]
+
     actions = [torch.Tensor(action) for action in actions]
 
     batches = [batch for batch in zip(observations,
                                       infer_action.actions_to_classes(actions))]
     gpu = torch.device('cuda')
 
-    nr_epochs = 100
+    nr_epochs = 250
     batch_size = 64
     number_of_classes = len(ClassificationNetwork.classes)
     start_time = time.time()
