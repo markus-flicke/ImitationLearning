@@ -24,30 +24,36 @@ class ClassificationNetwork(torch.nn.Module):
 
         self.features_2d = torch.nn.Sequential(
             torch.nn.Conv2d(1, 2, 3, stride=1),
+            torch.nn.BatchNorm2d(2),
             torch.nn.LeakyReLU(negative_slope=0.2),  # 94x94
             torch.nn.Conv2d(2, 4, 3, stride=2),
+            torch.nn.BatchNorm2d(4),
             torch.nn.LeakyReLU(negative_slope=0.2),  # 46x46
             torch.nn.Conv2d(4, 8, 3, stride=2),
+            torch.nn.BatchNorm2d(8),
             torch.nn.LeakyReLU(negative_slope=0.2),  # 22x22
-
         ).to(gpu)
 
         self.features_1d = torch.nn.Sequential(
             torch.nn.Linear(3344, 512),
+            torch.nn.BatchNorm1d(512),
             torch.nn.LeakyReLU(negative_slope=0.2),
-            torch.nn.Linear(512, 64 * 16),
+            torch.nn.Linear(512, 256),
+            torch.nn.BatchNorm1d(256),
             torch.nn.LeakyReLU(negative_slope=0.2)
         ).to(gpu)
 
         self.scores = torch.nn.Sequential(
-            torch.nn.Linear(1031, 64),
+            torch.nn.Linear(263, 64),
+            torch.nn.BatchNorm1d(64),
             torch.nn.LeakyReLU(negative_slope=0.2),
             torch.nn.Linear(64, 32),
+            torch.nn.BatchNorm1d(32),
             torch.nn.LeakyReLU(negative_slope=0.2),
             torch.nn.Linear(32, 16),
             torch.nn.LeakyReLU(negative_slope=0.2),
             torch.nn.Linear(16, 9),
-            torch.nn.Softmax(dim=1)
+            torch.nn.Softmax()
         ).to(gpu)
 
     def forward(self, observation):
@@ -120,7 +126,7 @@ class ClassificationNetwork(torch.nn.Module):
         Maps the scores predicted by the network to an action-class and returns
         the corresponding action [steer, gas, brake].
         scores:         python list of torch.Tensors of size number_of_classes
-        scores = [torch.Tensor([1,0,0,0,0,0,0,0,0])]
+        scores = [torch.Tensor([1,0,0,0,0,0,0,0,0]),]
         return          (float, float, float)  // This is the action resulting from the first score -> Therefore, why do we feed a list of scores?
         """
         _, class_number = torch.max(scores[0], dim=0)

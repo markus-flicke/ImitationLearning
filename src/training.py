@@ -1,7 +1,7 @@
 import torch
 import random
 import time
-from network import ClassificationNetwork
+from network import ClassificationNetwork # network_multiclass
 from imitations import load_imitations
 import numpy as np
 
@@ -57,6 +57,7 @@ def train(data_folder, trained_network_file):
             epoch + 1, total_loss, time_left))
 
     torch.save(infer_action, trained_network_file)
+
 
 
 def cross_entropy_loss(batch_out, batch_gt):

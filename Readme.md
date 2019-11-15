@@ -93,4 +93,7 @@
 * Batch normalisation
 * Larger dataset
 
+### TODO
+Figure out why Batchnorm didn't work for us
+
 <!--Read up on batch normalisation-->
