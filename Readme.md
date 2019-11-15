@@ -84,3 +84,13 @@
 * How to delete grass from a tensor?
 * Cross entropy loss
 * Inverse reinforcement learning
+
+
+### Ideas to try
+* Green channel may be most important -> use only green
+* Compare results to full color
+* Use deeper network
+* Batch normalisation
+* Larger dataset
+
+<!--Read up on batch normalisation-->
