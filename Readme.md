@@ -92,6 +92,7 @@
 * Use deeper network
 * Batch normalisation
 * Larger dataset
+* Rotate the game, play it, train on this augmented data
 
 ### TODO
 Figure out why Batchnorm didn't work for us

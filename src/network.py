@@ -24,36 +24,30 @@ class ClassificationNetwork(torch.nn.Module):
 
         self.features_2d = torch.nn.Sequential(
             torch.nn.Conv2d(1, 2, 3, stride=1),
-            torch.nn.BatchNorm2d(2),
             torch.nn.LeakyReLU(negative_slope=0.2),  # 94x94
             torch.nn.Conv2d(2, 4, 3, stride=2),
-            torch.nn.BatchNorm2d(4),
             torch.nn.LeakyReLU(negative_slope=0.2),  # 46x46
             torch.nn.Conv2d(4, 8, 3, stride=2),
-            torch.nn.BatchNorm2d(8),
             torch.nn.LeakyReLU(negative_slope=0.2),  # 22x22
+
         ).to(gpu)
 
         self.features_1d = torch.nn.Sequential(
             torch.nn.Linear(3344, 512),
-            torch.nn.BatchNorm1d(512),
             torch.nn.LeakyReLU(negative_slope=0.2),
-            torch.nn.Linear(512, 256),
-            torch.nn.BatchNorm1d(256),
+            torch.nn.Linear(512, 64 * 16),
             torch.nn.LeakyReLU(negative_slope=0.2)
         ).to(gpu)
 
         self.scores = torch.nn.Sequential(
-            torch.nn.Linear(263, 64),
-            torch.nn.BatchNorm1d(64),
+            torch.nn.Linear(1031, 64),
             torch.nn.LeakyReLU(negative_slope=0.2),
             torch.nn.Linear(64, 32),
-            torch.nn.BatchNorm1d(32),
             torch.nn.LeakyReLU(negative_slope=0.2),
             torch.nn.Linear(32, 16),
             torch.nn.LeakyReLU(negative_slope=0.2),
             torch.nn.Linear(16, 9),
-            torch.nn.Softmax()
+            torch.nn.Softmax(dim=1)
         ).to(gpu)
 
     def forward(self, observation):
